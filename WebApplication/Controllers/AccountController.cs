@@ -33,7 +33,7 @@ namespace WebApplication.Controllers
         public AccountController()
         {
             abm = new AzureBlobManager();
-            abm.DoAll("dumpster");
+            abm.CombineImgAndUploadToBlob("dumpster");
         }
 
         public AccountController(ApplicationUserManager userManager,

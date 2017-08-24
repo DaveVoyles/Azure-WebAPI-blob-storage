@@ -195,7 +195,7 @@ namespace WebApplication.Classes
         /// All functionality required to upload images from blob storage
         /// </summary>
         /// <param name="sContainer">Container where we want to upload images to</param>
-        public void DoAll(string sContainer)
+        public void CombineImgAndUploadToBlob(string sContainer)
         {
             GetAllBlobsInContainerAsCloudBlob(sContainer                           );
             ConvertBlobs(sContainer                                                );
@@ -288,14 +288,14 @@ namespace WebApplication.Classes
             try
             {
                 CloudBlobContainer container = _blobClient.GetContainerReference(containerName);
-                var blobs = container.ListBlobs(useFlatBlobListing: true);
-                var blobNames = new List<string>();
+                var blobs                    = container.ListBlobs(useFlatBlobListing: true);
+                var blobNames                = new List<string>();
 
                 foreach (var item in blobs)
                 {
                     var blob = (CloudBlockBlob)item;
-                    blob.FetchAttributes();
-                    blobNames.Add(blob.Name);
+                        blob.FetchAttributes();
+                        blobNames.Add(blob.Name);
                 }
                 return blobNames;
             }
