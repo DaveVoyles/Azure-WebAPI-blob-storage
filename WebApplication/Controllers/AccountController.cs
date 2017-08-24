@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using WebApplication.Models;
 using WebApplication.Providers;
 using WebApplication.Results;
+using WebApplication;
+using WebApplication.Classes;
 
 namespace WebApplication.Controllers
 {
@@ -23,11 +25,19 @@ namespace WebApplication.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
+
+        private AzureBlobManager abm;
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
         public AccountController()
         {
+            abm = new AzureBlobManager
+            {
+                ContainerName = AzureBlobManager.GenerateNameForContainer(),
+                DirectoryName = "TheBlob" + "/" + "PathYouWant" + "/"
+            };
+            abm.DoAll("dumpster");
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -35,6 +45,16 @@ namespace WebApplication.Controllers
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+        }
+
+
+        [Route("GetImages")]
+        public async Task<IHttpActionResult>  GetImages()
+        {
+            // TODO: Make await
+            abm.ConvertBlobs("dumpster");
+
+            return Ok();
         }
 
         public ApplicationUserManager UserManager
