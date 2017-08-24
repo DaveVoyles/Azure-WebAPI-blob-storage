@@ -94,9 +94,9 @@ namespace WebApplication.Classes
         //private static string connString = Environment.GetEnvironmentVariable("ConnString");
 
         // Used with web.config
-        private static string connString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
-        private static string _key = ConfigurationManager.ConnectionStrings["Key"].ConnectionString;
-        private static string _name = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
+        private static string connString = ConfigurationManager.ConnectionStrings["ConnString" ].ConnectionString;
+        private static string _key       = ConfigurationManager.ConnectionStrings["Key"        ].ConnectionString;
+        private static string _name      = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
 
 
         //To initialize the default storage credentials if none are provided. 
@@ -104,9 +104,9 @@ namespace WebApplication.Classes
         //private StorageCredentials _storageCredentials = new StorageCredentials(_name, _key);
         CloudStorageAccount _storageCredentials = CloudStorageAccount.Parse(connString);
 
-        private CloudStorageAccount _storageAccount;// = new CloudStorageAccount(_storageCredentials, false);
-        private CloudBlobContainer _container;
-        private CloudBlockBlob _blockBlob;     // = _container.GetBlockBlobReference("myfirstupload.txt");
+        private CloudStorageAccount  _storageAccount;// = new CloudStorageAccount(_storageCredentials, false);
+        private CloudBlobContainer   _container;
+        private CloudBlockBlob       _blockBlob;     // = _container.GetBlockBlobReference("myfirstupload.txt");
         private readonly List<Image> _imageList = new List<Image>();
 
         #endregion Private Members
@@ -122,8 +122,8 @@ namespace WebApplication.Classes
         {
             //_storageAccount = new CloudStorageAccount(_storageCredentials, false);
             _storageAccount = CloudStorageAccount.Parse(connString);
-            _blobClient = _storageAccount.CreateCloudBlobClient();
-            _container = _blobClient.GetContainerReference(ROOT_CONTAINER_NAME);
+            _blobClient     = _storageAccount.CreateCloudBlobClient();
+            _container      = _blobClient.GetContainerReference(ROOT_CONTAINER_NAME);
         }
 
         /// <summary>
@@ -133,9 +133,9 @@ namespace WebApplication.Classes
         public AzureBlobManager(string containerName, StorageCredentials storageCredentials)
         {
             _storageAccount = new CloudStorageAccount(storageCredentials, false);
-            _blobClient = _storageAccount.CreateCloudBlobClient();
-            _containerName = containerName;
-            _container = _blobClient.GetContainerReference(_containerName);
+            _blobClient     = _storageAccount.CreateCloudBlobClient();
+            _containerName  = containerName;
+            _container      = _blobClient.GetContainerReference(_containerName);
         }
 
         #endregion Constructors
