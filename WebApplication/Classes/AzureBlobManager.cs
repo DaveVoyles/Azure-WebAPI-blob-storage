@@ -78,22 +78,8 @@ namespace WebApplication.Classes
         /// Rename as appropriate for your system.
         /// NOTE: MUST be --lower case--, otherwise Azure returns a 400 error
         /// </summary>
-        //public const string ROOT_CONTAINER_NAME = "container";
         public const string ROOT_CONTAINER_NAME = "dumpster";
 
-        /// <summary>
-        ///  Grab file name from file & append the date.
-        ///  Later on we'll use this to search for containers within a week and return those w/ images
-        /// </summary>
-        /// <param name="name">Name from the file POSTed</param>
-        public static string GenerateNameForContainer()
-        {
-            string containerName = ROOT_CONTAINER_NAME;
-            string currentTime = DateTime.Now.ToString("-dd-M-yy");
-            string newName = containerName + currentTime;
-
-            return newName;
-        }
 
         #endregion Public Constants
 
@@ -205,14 +191,30 @@ namespace WebApplication.Classes
 
         #region Public Methods
 
+        /// <summary>
+        /// All functionality required to upload images from blob storage
+        /// </summary>
+        /// <param name="sContainer">Container where we want to upload images to</param>
         public void DoAll(string sContainer)
         {
-            GetAllBlobsInContainerAsCloudBlob(sContainer  );
-            ConvertBlobs(sContainer                       );
-            var combinedImg = CombineImages(this.ImageList);
-            var imgAsBytes  = combinedImg.ToByteArray(    );
+            GetAllBlobsInContainerAsCloudBlob(sContainer                           );
+            ConvertBlobs(sContainer                                                );
+            var combinedImg    = CombineImages(this.ImageList                      );
+            var imgAsBytes     = combinedImg.ToByteArray(                          );
+            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
+            var sFileName      = PrependDateToNameJpg("ImageOfDay"                 );
 
-            PutBlobViaByteArray(sContainer, "FinalImage.jpg", imgAsBytes);
+            // Check if container exists base on today's date
+            if (DoesContainerExist(sContainerName) == true)
+            {
+                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+            }
+            else
+            {
+                CreateContainer(sContainerName);
+                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+            }
+  
         }
 
 
@@ -796,6 +798,32 @@ namespace WebApplication.Classes
             blob.DownloadToByteArray(fileContentsAsByteArr, 0);
 
             return fileContentsAsByteArr;
+        }
+
+
+        /// <summary>
+        ///  Appends current date to file name.
+        ///  Later on we'll use this to search for containers within a week and return those w/ images
+        /// </summary>
+        private static string AppendDateToName(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("-dd-mm-yy");
+            string newName = sRootName + currentDate;
+
+            return newName;
+        }
+
+        /// <summary>
+        /// Prepends current date to file name with format: dd-mm-yy
+        /// </summary>
+        /// <param name="sRootName">Name of file we are prepending</param>
+        /// <returns></returns>
+        private static string PrependDateToNameJpg(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("dd-mm-yy-");
+            string newName = currentDate + sRootName + ".jpg";
+
+            return newName;
         }
 
         #endregion  Private Methods

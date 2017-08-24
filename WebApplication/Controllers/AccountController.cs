@@ -32,11 +32,7 @@ namespace WebApplication.Controllers
 
         public AccountController()
         {
-            abm = new AzureBlobManager
-            {
-                ContainerName = AzureBlobManager.GenerateNameForContainer(),
-                DirectoryName = "TheBlob" + "/" + "PathYouWant" + "/"
-            };
+            abm = new AzureBlobManager();
             abm.DoAll("dumpster");
         }
 
@@ -45,16 +41,6 @@ namespace WebApplication.Controllers
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
-        }
-
-
-        [Route("GetImages")]
-        public async Task<IHttpActionResult>  GetImages()
-        {
-            // TODO: Make await
-            abm.ConvertBlobs("dumpster");
-
-            return Ok();
         }
 
         public ApplicationUserManager UserManager
