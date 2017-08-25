@@ -80,6 +80,8 @@ namespace WebApplication.Classes
         /// </summary>
         public const string ROOT_CONTAINER_NAME = "dumpster";
 
+        public string status_SUCCESS = "Sucessfully uploaded image to Azure";
+
 
         #endregion Public Constants
 
@@ -195,7 +197,7 @@ namespace WebApplication.Classes
         /// All functionality required to upload images from blob storage
         /// </summary>
         /// <param name="sContainer">Container where we want to upload images to</param>
-        public void CombineImgAndUploadToBlob(string sContainer)
+        public string CombineImgAndUploadToBlob(string sContainer)
         {
             GetAllBlobsInContainerAsCloudBlob(sContainer                           );
             ConvertBlobs(sContainer                                                );
@@ -214,7 +216,7 @@ namespace WebApplication.Classes
                 CreateContainer(sContainerName);
                 PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
             }
-  
+            return status_SUCCESS;
         }
 
 
@@ -807,7 +809,7 @@ namespace WebApplication.Classes
         /// </summary>
         private static string AppendDateToName(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("-dd-mm-yy");
+            string currentDate = DateTime.Today.ToString("-dd-MM-yy");
             string newName = sRootName + currentDate;
 
             return newName;
@@ -820,7 +822,7 @@ namespace WebApplication.Classes
         /// <returns></returns>
         private static string PrependDateToNameJpg(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("dd-mm-yy-");
+            string currentDate = DateTime.Today.ToString("dd-MM-yy-");
             string newName = currentDate + sRootName + ".jpg";
 
             return newName;
