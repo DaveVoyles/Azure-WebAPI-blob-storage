@@ -52,25 +52,72 @@ var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].Conn
 Create your connection string in the configuration tool there. [Documentation.](https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/)
 
 
-### Passing an image to the function
+### Uploading images to blob storage
 
-This is done by making an HTTP POST request. Inside the body of the message, we want to pass in JSON content, with a key/value pair like this:
+This is done by making a **POST** request for *each image* you would like to upload. Navigate to **nameOfWebsite/api/upload** and pass in the image as a a *.png* or *.jpg*.
 
-```json
-{
-	"name":"http://snoopdogg.com/wp-content/themes/snoop_2014/assets/images/og-img.jpg"
-}
+This function will  reads the incoming multipart request, and convert it into a memory streams on the server side.
+
+In a tool such as Postman, I would post an image like so:
+
+![Imgur](http://i.imgur.com/spV8fqO.png)
+
+And make sure that the header (in Postman at least) is empty, as Postman will fill it in automatically when it sends the data:
+
+![Imgur](http://i.imgur.com/Vo7XFm1.png)
+
+
+This takes the name of the image, pre-pends the current date, and saves the image to a container named after the current date to blob storage. 
+
+## Functionality
+
+### Combining images and uploading to blob storage
+
+You can also make a **Get** call to **nameOfWebsite/api/Images** and it will combine all of the images found in a container matching today's date. 
+
+It is done with this function:
+
+```csharp
+        // GET: api/Images
+        /// <summary>
+        /// Searches for container with current date, then combines all images into one and uploads
+        /// </summary>
+        public string GetCombineImagesInBlob()
+        {
+           var    abm = new AzureBlobManager();
+           return abm.CombineImgAndUploadToBlob("dumpster");
+        }
 ```
 
-In a tool such as Postman, I would write my message like so:
+Which calls:
 
-![Imgur](http://i.imgur.com/mjUb0DS.png)
+```csharp
+        /// <summary>
+        /// All functionality required to upload images from blob storage
+        /// </summary>
+        /// <param name="sContainer">Container where we want to upload images to</param>
+        public string CombineImgAndUploadToBlob(string sContainer)
+        {
+            GetAllBlobsInContainerAsCloudBlob(sContainer                           );
+            ConvertBlobs(sContainer                                                );
+            var combinedImg    = CombineImages(this.ImageList                      );
+            var imgAsBytes     = combinedImg.ToByteArray(                          );
+            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
+            var sFileName      = PrependDateToNameJpg("ImageOfDay"                 );
 
-The URL to send the message is found in the console when you start your Azure Function app. 
-![Imgur](http://i.imgur.com/wy8ABfa.png)
-
-
-This takes the name of the image, pre-pends the current date, and saves the image to blob storage. 
+            // Check if container exists base on today's date
+            if (DoesContainerExist(sContainerName) == true)
+            {
+                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+            }
+            else
+            {
+                CreateContainer(sContainerName);
+                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+            }
+            return status_SUCCESS;
+        }
+```
 
   [1]: http://www.daveVoyles.com "My website"
 

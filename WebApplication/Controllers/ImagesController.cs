@@ -11,9 +11,11 @@ namespace WebApplication.Controllers
     public class ImagesController : ApiController
     {
         // GET: api/Images
-        public string Get()
+        /// <summary>
+        /// Searches for container with current date, then combines all images into one and uploads
+        /// </summary>
+        public string GetCombineImagesInBlob()
         {
-           // Create instance of Azure Blob Manager and run task to update images
            var    abm = new AzureBlobManager();
            return abm.CombineImgAndUploadToBlob("dumpster");
         }
