@@ -42,36 +42,30 @@ AzureBlobManager.cs uses this to connect to your blob storage account:
         }
 ```
 
-But so does the **BlobStorageMultipartStreamProvider** with this line:
+As does the **BlobStorageMultipartStreamProvider** with this line:
 
 ```csharp
 var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
 ```
 
-and **UploadController** with these lines:
-
-```csharp
-var accountName = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
-var accountKey  = ConfigurationManager.ConnectionStrings["Key"        ].ConnectionString;
-```
 
 ### If hosting this in azure
-Create your connection string in the configuration tool there. [Documentation.](https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/)
+Create your connection strings in the configuration tool there. [Documentation.](https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/)
 
 
 ### Uploading images to blob storage
 
-This is done by making a **POST** request for *each image* you would like to upload. Navigate to **nameOfWebsite/api/upload** and pass in the image as a a *.png* or *.jpg*.
+This is done by making a **POST** request for *each image* you would like to upload. Navigate to **nameOfWebsite/api/ImageUpload** and pass in the image as a a *.png* or *.jpg*.
 
 This function will  reads the incoming multipart request, and convert it into a memory streams on the server side.
 
 In a tool such as Postman, I would post an image like so:
 
-![Imgur](http://i.imgur.com/spV8fqO.png)
+![Imgur](http://i.imgur.com/FTivg5G.png)
 
 And make sure that the header (in Postman at least) is empty, as Postman will fill it in automatically when it sends the data:
 
-![Imgur](http://i.imgur.com/Vo7XFm1.png)
+![Imgur](http://i.imgur.com/f19NDwO.png)
 
 
 This takes the name of the image, pre-pends the current date, and saves the image to a container named after the current date to blob storage. 
