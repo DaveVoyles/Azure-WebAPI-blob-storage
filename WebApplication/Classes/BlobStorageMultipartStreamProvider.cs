@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -16,6 +13,7 @@ namespace WebApplication.Classes
     /// </summary>
     public class BlobStorageMultipartStreamProvider : MultipartStreamProvider
     {
+        // Get memory stream from the file being uploaded
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
         {
             Stream stream                                    = null;
@@ -23,16 +21,19 @@ namespace WebApplication.Classes
 
             if (!string.IsNullOrWhiteSpace(contentDisposition?.FileName))
             {
-                // TODO: Change this to the container for each day
-                string containerName = "dumpster";
-                var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
+                // Create container
+                var containerName  = "dumpster";     
+                var sContainerName = AppendDateToName(containerName);
 
+                // Blob storage set-up
+                var connectionString               = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
                 CloudBlobClient blobClient         = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer blobContainer   = blobClient.GetContainerReference(containerName);
+                CloudBlobContainer blobContainer   = blobClient.GetContainerReference(sContainerName);
+                                   blobContainer.CreateIfNotExists();
 
-  
-                var fileName = PrependDateToNameJpg("Images");
+                // Prepend date to image name 
+                var fileName        = PrependDateToNameJpg("Images");
                 CloudBlockBlob blob = blobContainer.GetBlockBlobReference(fileName);
 
                 stream = blob.OpenWrite();
@@ -41,10 +42,29 @@ namespace WebApplication.Classes
         }
 
 
+        /// <summary>
+        /// Prepends current date to file name with format: yy-MM-dd-HH-mm-ss
+        /// </summary>
+        /// <param name="sRootName">Name of file we are prepending</param>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
         private static string PrependDateToNameJpg(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss-");
             string newName     = currentDate + sRootName + ".jpg";
+
+            return newName;
+        }
+
+
+        /// <summary>
+        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
+        ///  Later on we'll use this to search for containers within a week and return those w/ images
+        /// </summary>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
+        private static string AppendDateToName(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("-yy-MM-dd-HH-mm-ss");
+            string newName = sRootName + currentDate;
 
             return newName;
         }

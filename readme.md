@@ -24,7 +24,7 @@ You'll need to change the connection strings in the *web.config* file:
 ```
 
 
-That information can be found in your Azure Portal, Azure Storage Explorer, or through the Functions CLI. Here is where it appears in the portal:
+That information can be found in your Azure Portal or Azure Storage Explorer, Here is where it appears in the portal:
 
 ![Imgur](http://i.imgur.com/bVsa0zI.png)
 
@@ -46,6 +46,13 @@ But so does the **BlobStorageMultipartStreamProvider** with this line:
 
 ```csharp
 var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
+```
+
+and **UploadController** with these lines:
+
+```csharp
+var accountName = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
+var accountKey  = ConfigurationManager.ConnectionStrings["Key"        ].ConnectionString;
 ```
 
 ### If hosting this in azure

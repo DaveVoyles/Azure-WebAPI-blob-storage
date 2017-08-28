@@ -132,9 +132,10 @@ namespace WebApplication.Classes
         /// Initializes a new instance of the <see cref="AzureBlobManager" /> class 
         /// with the specified container and storage credentials.
         /// </summary>
-        public AzureBlobManager(string containerName, StorageCredentials storageCredentials)
+        public AzureBlobManager(string containerName)
         {
-            _storageAccount = new CloudStorageAccount(storageCredentials, false);
+            //_storageAccount = new CloudStorageAccount(storageCredentials, false);
+            _storageAccount = CloudStorageAccount.Parse(connString);
             _blobClient     = _storageAccount.CreateCloudBlobClient();
             _containerName  = containerName;
             _container      = _blobClient.GetContainerReference(_containerName);
@@ -209,15 +210,31 @@ namespace WebApplication.Classes
             // Check if container exists base on today's date
             if (DoesContainerExist(sContainerName) == true)
             {
-                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+                PutBlobAsByteArray(sContainerName, sFileName, imgAsBytes);
             }
             else
             {
                 CreateContainer(sContainerName);
-                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+                PutBlobAsByteArray(sContainerName, sFileName, imgAsBytes);
             }
             return status_SUCCESS;
         }
+
+
+        //public void HandleStream()
+        //{
+        //    var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME);
+        //    if (DoesContainerExist(sContainerName) == true)
+        //    {
+        //        var container = _blobClient.GetContainerReference(sContainerName);
+
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //    var container = _blobClient.GetContainerReference(sContainerName);
+        //}
 
         /// <summary>
         /// Loops through blobs in a blob container.
@@ -438,7 +455,7 @@ namespace WebApplication.Classes
         /// <param name="blobName">Name of the blob.</param>
         /// <param name="content">The content of the blob.</param>
         /// <returns></returns>
-        public bool PutBlobViaByteArray(string containerName, string blobName, byte[] content)
+        public bool PutBlobAsByteArray(string containerName, string blobName, byte[] content)
         {
             return ExecuteWithExceptionHandlingAndReturnValue(
                     () =>
@@ -710,6 +727,32 @@ namespace WebApplication.Classes
         }
 
 
+        /// <summary>
+        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
+        ///  Later on we'll use this to search for containers within a week and return those w/ images
+        /// </summary>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
+        public string AppendDateToName(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string newName = sRootName + currentDate;
+
+            return newName;
+        }
+
+        /// <summary>
+        /// Prepends current date to file name with format: yy-MM-dd-HH-mm-ss
+        /// </summary>
+        /// <param name="sRootName">Name of file we are prepending</param>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
+        public string PrependDateToNameJpg(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string newName = currentDate + sRootName + ".jpg";
+
+            return newName;
+        }
+
         #endregion  Public Methods
 
         #region Private Methods
@@ -799,34 +842,6 @@ namespace WebApplication.Classes
             blob.DownloadToByteArray(fileContentsAsByteArr, 0);
 
             return fileContentsAsByteArr;
-        }
-
-
-        /// <summary>
-        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
-        ///  Later on we'll use this to search for containers within a week and return those w/ images
-        /// </summary>
-        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
-
-        private static string AppendDateToName(string sRootName)
-        {
-            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
-            string newName     = sRootName + currentDate;
-
-            return newName;
-        }
-
-        /// <summary>
-        /// Prepends current date to file name with format: yy-MM-dd-HH-mm-ss
-        /// </summary>
-        /// <param name="sRootName">Name of file we are prepending</param>
-        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
-        private static string PrependDateToNameJpg(string sRootName)
-        {
-            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
-            string newName     = currentDate + sRootName + ".jpg";
-
-            return newName;
         }
 
         #endregion  Private Methods
