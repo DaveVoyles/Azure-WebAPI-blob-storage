@@ -48,6 +48,8 @@ As does the **BlobStorageMultipartStreamProvider** with this line:
 var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
 ```
 
+## Functionality
+----------
 
 ### If hosting this in azure
 Create your connection strings in the configuration tool there. [Documentation.](https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/)
@@ -70,7 +72,6 @@ And make sure that the header (in Postman at least) is empty, as Postman will fi
 
 This takes the name of the image, pre-pends the current date, and saves the image to a container named after the current date to blob storage. 
 
-## Functionality
 
 ### Combining images and uploading to blob storage
 
