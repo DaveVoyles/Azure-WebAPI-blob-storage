@@ -48,11 +48,13 @@ As does the **BlobStorageMultipartStreamProvider** with this line:
 var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
 ```
 
-## Functionality
-----------
 
 ### If hosting this in azure
 Create your connection strings in the configuration tool there. [Documentation.](https://azure.microsoft.com/en-us/blog/windows-azure-web-sites-how-application-strings-and-connection-strings-work/)
+
+
+## Functionality
+----------
 
 
 ### Uploading images to blob storage
