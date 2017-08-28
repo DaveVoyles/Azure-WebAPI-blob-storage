@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace WebApplication.Classes
 {
-
+    // UNUSED.
     public class AzureStorageMultipartFormDataStreamProvider : MultipartFormDataStreamProvider
     {
         private readonly CloudBlobContainer _blobContainer;

@@ -33,7 +33,6 @@ namespace WebApplication.Classes
 
   
                 var fileName = PrependDateToNameJpg("Images");
-                //CloudBlockBlob blob = blobContainer.GetBlockBlobReference(contentDisposition.FileName);
                 CloudBlockBlob blob = blobContainer.GetBlockBlobReference(fileName);
 
                 stream = blob.OpenWrite();
