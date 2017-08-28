@@ -26,8 +26,8 @@ namespace WebApplication.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var accountName = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
-            var accountKey  = ConfigurationManager.ConnectionStrings["Key"].ConnectionString;
+            var accountName = ConfigurationManager.AppSettings["AccountName"];
+            var accountKey  = ConfigurationManager.AppSettings["Key"];
 
             var storageAccount         = new CloudStorageAccount(new StorageCredentials(accountName, accountKey), true);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();

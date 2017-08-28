@@ -26,7 +26,7 @@ namespace WebApplication.Classes
                 var sContainerName = AppendDateToName(containerName);
 
                 // Blob storage set-up
-                var connectionString               = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
+                var connectionString               = ConfigurationManager.AppSettings["ConnString"];
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
                 CloudBlobClient blobClient         = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer   = blobClient.GetContainerReference(sContainerName);

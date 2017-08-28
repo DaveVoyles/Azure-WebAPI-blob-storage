@@ -96,9 +96,9 @@ namespace WebApplication.Classes
         //private static string connString = Environment.GetEnvironmentVariable("ConnString");
 
         // Used with web.config
-        private static string connString = ConfigurationManager.ConnectionStrings["ConnString" ].ConnectionString;
-        private static string _key       = ConfigurationManager.ConnectionStrings["Key"        ].ConnectionString;
-        private static string _name      = ConfigurationManager.ConnectionStrings["AccountName"].ConnectionString;
+        private static string connString = ConfigurationManager.AppSettings["ConnString"];
+        private static string _key       = ConfigurationManager.AppSettings["Key"        ];
+        private static string _name      = ConfigurationManager.AppSettings["AccountName"];
 
 
         //To initialize the default storage credentials if none are provided. 
