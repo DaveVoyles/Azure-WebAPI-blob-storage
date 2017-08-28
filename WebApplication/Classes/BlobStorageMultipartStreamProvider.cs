@@ -57,14 +57,14 @@ namespace WebApplication.Classes
 
 
         /// <summary>
-        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
+        ///  Appends current date to file name with format: yy-MM-dd
         ///  Later on we'll use this to search for containers within a week and return those w/ images
         /// </summary>
-        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
+        /// <returns>A string with current date to file name with format: yy-MM-dd</returns>
         private static string AppendDateToName(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("-yy-MM-dd-HH-mm-ss");
-            string newName = sRootName + currentDate;
+            string currentDate = DateTime.Now.ToString("-yy-MM-dd");
+            string newName     = sRootName + currentDate;
 
             return newName;
         }

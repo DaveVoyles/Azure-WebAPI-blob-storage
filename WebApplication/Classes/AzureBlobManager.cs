@@ -728,14 +728,14 @@ namespace WebApplication.Classes
 
 
         /// <summary>
-        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
+        ///  Appends current date to file name with format: yy-MM-dd
         ///  Later on we'll use this to search for containers within a week and return those w/ images
         /// </summary>
-        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
-        public string AppendDateToName(string sRootName)
+        /// <returns>A string with current date to file name with format: yy-MM-dd</returns>
+        private static string AppendDateToName(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
-            string newName = sRootName + currentDate;
+            string currentDate = DateTime.Now.ToString("-yy-MM-dd");
+            string newName     = sRootName + currentDate;
 
             return newName;
         }
@@ -745,10 +745,10 @@ namespace WebApplication.Classes
         /// </summary>
         /// <param name="sRootName">Name of file we are prepending</param>
         /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
-        public string PrependDateToNameJpg(string sRootName)
+        private static string PrependDateToNameJpg(string sRootName)
         {
-            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
-            string newName = currentDate + sRootName + ".jpg";
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss-");
+            string newName     = currentDate + sRootName + ".jpg";
 
             return newName;
         }
