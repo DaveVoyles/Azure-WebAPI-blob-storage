@@ -11,6 +11,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace WebApplication.Classes
 {
+    /// <summary>
+    /// Uploads a single image to blob storage 
+    /// </summary>
     public class BlobStorageMultipartStreamProvider : MultipartStreamProvider
     {
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
@@ -20,6 +23,7 @@ namespace WebApplication.Classes
 
             if (!string.IsNullOrWhiteSpace(contentDisposition?.FileName))
             {
+                // TODO: Change this to the container for each day
                 string containerName = "dumpster";
                 var connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
 
@@ -27,13 +31,23 @@ namespace WebApplication.Classes
                 CloudBlobClient blobClient         = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer   = blobClient.GetContainerReference(containerName);
 
-                var fileName = "knuckles.jpg";
+  
+                var fileName = PrependDateToNameJpg("Images");
                 //CloudBlockBlob blob = blobContainer.GetBlockBlobReference(contentDisposition.FileName);
                 CloudBlockBlob blob = blobContainer.GetBlockBlobReference(fileName);
 
                 stream = blob.OpenWrite();
             }
             return stream;
+        }
+
+
+        private static string PrependDateToNameJpg(string sRootName)
+        {
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string newName     = currentDate + sRootName + ".jpg";
+
+            return newName;
         }
     }
 }

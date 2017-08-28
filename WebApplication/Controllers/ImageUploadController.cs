@@ -11,6 +11,7 @@ namespace WebApplication.Controllers
     {
         public async Task<HttpResponseMessage> PostFormData()
         {
+            // Must be correct media type
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -18,6 +19,7 @@ namespace WebApplication.Controllers
 
             try
             {
+                // Main part of the function
                 MultipartStreamProvider provider = new BlobStorageMultipartStreamProvider();
                 await Request.Content.ReadAsMultipartAsync(provider);
             }

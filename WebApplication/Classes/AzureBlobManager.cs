@@ -219,7 +219,6 @@ namespace WebApplication.Classes
             return status_SUCCESS;
         }
 
-
         /// <summary>
         /// Loops through blobs in a blob container.
         /// </summary>
@@ -804,26 +803,28 @@ namespace WebApplication.Classes
 
 
         /// <summary>
-        ///  Appends current date to file name.
+        ///  Appends current date to file name with format: yy-MM-dd-HH-mm-ss
         ///  Later on we'll use this to search for containers within a week and return those w/ images
         /// </summary>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
+
         private static string AppendDateToName(string sRootName)
         {
-            string currentDate = DateTime.Today.ToString("-dd-MM-yy");
-            string newName = sRootName + currentDate;
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string newName     = sRootName + currentDate;
 
             return newName;
         }
 
         /// <summary>
-        /// Prepends current date to file name with format: dd-mm-yy
+        /// Prepends current date to file name with format: yy-MM-dd-HH-mm-ss
         /// </summary>
         /// <param name="sRootName">Name of file we are prepending</param>
-        /// <returns></returns>
+        /// <returns>A string with current date to file name with format: yy-MM-dd-HH-mm-ss</returns>
         private static string PrependDateToNameJpg(string sRootName)
         {
-            string currentDate = DateTime.Today.ToString("dd-MM-yy-");
-            string newName = currentDate + sRootName + ".jpg";
+            string currentDate = DateTime.Now.ToString("yy-MM-dd-HH-mm-ss");
+            string newName     = currentDate + sRootName + ".jpg";
 
             return newName;
         }
