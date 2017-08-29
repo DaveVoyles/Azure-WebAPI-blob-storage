@@ -89,7 +89,7 @@ It is done with this function:
         public string GetCombineImagesInBlob()
         {
            var    abm = new AzureBlobManager();
-           return abm.CombineImgAndUploadToBlob("dumpster");
+           return abm.CombineImgAndUploadToBlob();
         }
 ```
 
@@ -99,29 +99,35 @@ Which calls:
         /// <summary>
         /// All functionality required to upload images from blob storage
         /// </summary>
-        /// <param name="sContainer">Container where we want to upload images to</param>
-        public string CombineImgAndUploadToBlob(string sContainer)
+        public string CombineImgAndUploadToBlob()
         {
-            GetAllBlobsInContainerAsCloudBlob(sContainer                           );
-            ConvertBlobs(sContainer                                                );
+            // Grab all images from container matching today's date
+            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
+            GetAllBlobsInContainerAsCloudBlob(sContainerName                       );
+            ConvertBlobs(sContainerName                                            );
             var combinedImg    = CombineImages(this.ImageList                      );
             var imgAsBytes     = combinedImg.ToByteArray(                          );
-            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
             var sFileName      = PrependDateToNameJpg("ImageOfDay"                 );
 
             // Check if container exists base on today's date
             if (DoesContainerExist(sContainerName) == true)
             {
-                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+                PutBlobAsByteArray(sContainerName, sFileName, imgAsBytes);
             }
             else
             {
                 CreateContainer(sContainerName);
-                PutBlobViaByteArray(sContainerName, sFileName, imgAsBytes);
+                PutBlobAsByteArray(sContainerName, sFileName, imgAsBytes);
             }
-            return status_SUCCESS;
-        }
+            ret
 ```
+
+----------
+## Running this on a scheduler
+
+I have the call to *api/Images* being run on an [Azure Scheduler](https://azure.microsoft.com/en-us/services/scheduler/) every 24 hours. What this does it call that endpoint with an **HTTP GET** request, which fires off the **CombineImgAndUploadToBlob()** function.
+
+With this, all of the images in the day's container are merged into one image, and re-uploaded so that I can analyze it later.
 
   [1]: http://www.daveVoyles.com "My website"
 
