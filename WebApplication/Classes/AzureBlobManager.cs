@@ -197,14 +197,14 @@ namespace WebApplication.Classes
         /// <summary>
         /// All functionality required to upload images from blob storage
         /// </summary>
-        /// <param name="sContainer">Container where we want to upload images to</param>
-        public string CombineImgAndUploadToBlob(string sContainer)
+        public string CombineImgAndUploadToBlob()
         {
-            GetAllBlobsInContainerAsCloudBlob(sContainer                           );
-            ConvertBlobs(sContainer                                                );
+            // Grab all images from container matching today's date
+            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
+            GetAllBlobsInContainerAsCloudBlob(sContainerName                       );
+            ConvertBlobs(sContainerName                                            );
             var combinedImg    = CombineImages(this.ImageList                      );
             var imgAsBytes     = combinedImg.ToByteArray(                          );
-            var sContainerName = AppendDateToName(ROOT_CONTAINER_NAME              );
             var sFileName      = PrependDateToNameJpg("ImageOfDay"                 );
 
             // Check if container exists base on today's date
