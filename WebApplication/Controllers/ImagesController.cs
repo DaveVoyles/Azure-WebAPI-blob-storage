@@ -17,7 +17,7 @@ namespace WebApplication.Controllers
         public string GetCombineImagesInBlob()
         {
            var    abm = new AzureBlobManager();
-           return abm.CombineImgAndUploadToBlob("dumpster");
+           return abm.CombineImgAndUploadToBlob();
         }
 
 
